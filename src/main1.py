@@ -258,7 +258,7 @@ class node2vec:
         emb = self.sess.run(
             self.emb1,
             feed_dict={
-                self.x_pos_inp: x
+                self.y_pos_inp: x
             })
         res = {i[0]:i[1] for i in enumerate(emb,0)}
         return res
