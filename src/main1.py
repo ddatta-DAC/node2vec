@@ -153,9 +153,8 @@ class node2vec:
 
             print('Shape : emb1  emb2 emb3 ', self.emb1.shape, self.emb2.shape, self.emb3.shape)
 
-
-
-            # Loss function
+            # ------- Loss function --------- #
+            # Expand tensor to do dot product
             tmp1 = tf.stack([self.emb1] * self.x_pos.shape[1], axis=1)
             tmp1 = tf.squeeze(tmp1, axis=2)
             t1 = tf.nn.l2_normalize(self.emb2, -1)
@@ -165,7 +164,6 @@ class node2vec:
             tmp2 = tf.stack([self.emb1] * self.neg_samples, axis=1)
             tmp2 = tf.squeeze(tmp2, axis=2)
             # do dot product
-
             t1 = tf.nn.l2_normalize(self.emb3, -1)
             t2 = tf.nn.l2_normalize(tmp2, -1)
             cs2 = tf.multiply(t1, t2)
@@ -174,9 +172,6 @@ class node2vec:
             cs2 = tf.math.exp(cs2)
             cs2 = -tf.log(tf.reduce_sum(cs2))
             loss = -(cs1 - cs2)
-
-            # loss1 = tf.cos(labels=self.x_pos, predictions=tmp1, axis=-1)
-            # loss2 = tf.losses.cosine_distance(labels=self.x_neg, predictions=tmp2, axis=-1)
 
             self.loss = loss
             self.optimizer = tf.train.GradientDescentOptimizer(learning_rate=1e-5)
@@ -253,7 +248,29 @@ class node2vec:
             plt.show()
         return
 
+    def get_emb_dict(self):
+        self.sess = tf.InteractiveSession()
+        self.init = tf.global_variables_initializer()
+        self.sess.run(self.init)
+
+        x = list(range(self.g_mat.shape[0]))
+        x = np.reshape(x,[-1,1])
+        emb = self.sess.run(
+            self.emb1,
+            feed_dict={
+                self.x_pos_inp: x
+            })
+        res = {i[0]:i[1] for i in enumerate(emb,0)}
+        return res
+
 
 g_matrix = inp_graph()
 n2v = node2vec(g_matrix, 8)
 n2v.train_model()
+emb_dict = n2v.get_emb_dict()
+
+
+print (emb_dict)
+
+
+
