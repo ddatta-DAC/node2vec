@@ -5,17 +5,8 @@ import networkx as nx
 
 
 # input Graph
+# Simple example : Zachary's Karate Club
 def inp_graph():
-    g = np.array([[0.0, 0.2, 0, 0, 0, 0, 0.3, 0.5],
-                  [0.4, 0, 0.3, 0.1, 0.1, 0, 0.1, 0.0],
-                  [0.2, 0, 0, 0, 0, 0, 0.3, 0.5],
-                  [0.0, 0, 0.1, 0.1, 0.25, 0, 0.3, 0.25],
-                  [0.1, 0, 0.1, 0, 0.2, 0, 0.1, 0.5],
-                  [0.1, 0, 0.1, 0, 0.2, 0, 0.1, 0.5],
-                  [0.2, 0, 0, 0, 0, 0, 0.3, 0.5],
-                  [0.2, 0, 0, 0, 0, 0, 0.3, 0.5],
-                  ])
-
     G = nx.karate_club_graph()
     num_nodes = len(G._adj)
     g = np.diag([1.0] * num_nodes)
